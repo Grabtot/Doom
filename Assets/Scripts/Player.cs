@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody), typeof(CharacterController), typeof(Hitable))]
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; } = null;
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     [Header("Shoot")]
     [SerializeField] private SpriteRenderer _shootPoint;
     [SerializeField] private float _shootDistance;
+    public Hitable Hitable;
     private Vector2 _moveInput;
 
     void Update()
@@ -50,7 +52,14 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Hitable.ReceivedDamage.AddListener(OnDamageReceived);
     }
+
+    private void OnDamageReceived(int arg0, int arg1)
+    {
+        print($"Received {arg0} damage. {arg1} HP left");
+    }
+
     private void Awake()
     {
         if (Instance == null)
