@@ -4,7 +4,8 @@ using Zenject;
 public class LookAtPlayer : MonoBehaviour
 {
     [Inject] private Player _player;
-    void Update()
+
+    private void Update()
     {
         transform.LookAt(_player.transform);
     }

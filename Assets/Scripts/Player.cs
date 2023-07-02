@@ -26,7 +26,8 @@ public class Player : MonoBehaviour
     {
         _shootPoint = shootPoint;
     }
-    void Update()
+
+    private void Update()
     {
         _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector3 moveX = transform.right * _moveInput.x;
