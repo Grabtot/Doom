@@ -5,7 +5,6 @@ namespace Enemy
 
     public class MeleeEnemy : Enemy
     {
-        [SerializeField] private float _attackDelay;
 
         private void Update()
         {

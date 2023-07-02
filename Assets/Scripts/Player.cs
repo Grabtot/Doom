@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(Rigidbody), typeof(CharacterController), typeof(Hitable))]
 public class Player : MonoBehaviour
 {
-    public static Player Instance { get; private set; } = null;
 
     [Header("Movement")]
     [SerializeField] private Rigidbody _rigidbody;
@@ -20,6 +20,12 @@ public class Player : MonoBehaviour
     public Hitable Hitable;
     private Vector2 _moveInput;
 
+
+    [Inject]
+    private void Construct(SpriteRenderer shootPoint)
+    {
+        _shootPoint = shootPoint;
+    }
     void Update()
     {
         _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -58,15 +64,5 @@ public class Player : MonoBehaviour
     private void OnDamageReceived(int arg0, int arg1)
     {
         print($"Received {arg0} damage. {arg1} HP left");
-    }
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance == this)
-            Destroy(gameObject);
-
-        DontDestroyOnLoad(gameObject);
     }
 }

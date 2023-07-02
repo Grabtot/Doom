@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 namespace Enemy
 {
@@ -15,9 +16,14 @@ namespace Enemy
         [SerializeField] protected Hitable _hitable;
         [SerializeField] private float _attackDelay;
 
-
+        protected Player Player;
         protected bool _canAttack = true;
 
+        [Inject]
+        private void Construct(Player player)
+        {
+            Player = player;
+        }
 
         protected virtual void Start()
         {
@@ -33,9 +39,9 @@ namespace Enemy
 
         protected virtual void MoveToPlayer()
         {
-            if (Vector3.Distance(transform.position, Player.Instance.transform.position) < _visionRange)
+            if (Vector3.Distance(transform.position, Player.transform.position) < _visionRange)
             {
-                Vector3 direction = Player.Instance.transform.position - transform.position;
+                Vector3 direction = Player.transform.position - transform.position;
                 direction.Normalize();
                 _rigidbody.velocity = direction * _speed;
             }
@@ -46,7 +52,7 @@ namespace Enemy
             {
                 StartCoroutine(nameof(AttackReload));
                 if (HitPlayer())
-                    Player.Instance.Hitable.GetDamage(damage);
+                    Player.Hitable.GetDamage(damage);
             }
         }
 
