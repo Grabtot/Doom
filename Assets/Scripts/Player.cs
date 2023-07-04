@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 [RequireComponent(typeof(Rigidbody), typeof(CharacterController), typeof(Hitable))]
 public class Player : MonoBehaviour
@@ -14,20 +14,50 @@ public class Player : MonoBehaviour
     [SerializeField] private float _cameraRotationSpeed = 5;
     [SerializeField] private CharacterController _characterController;
 
-    [Header("Shoot")]
-    [SerializeField] private SpriteRenderer _shootPoint;
-    [SerializeField] private float _shootDistance;
+    [Header("Weapon")]
+    [SerializeField] private List<Weapon> _weapons;
+    private Weapon _activeWeapon;
+
     public Hitable Hitable;
     private Vector2 _moveInput;
-
-
-    [Inject]
-    private void Construct(SpriteRenderer shootPoint)
-    {
-        _shootPoint = shootPoint;
-    }
+    private int _activeWeaponIndex = 0;
 
     private void Update()
+    {
+        Movement();
+        ChangeWeapon();
+    }
+
+    private void ChangeWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            _weapons[_activeWeaponIndex].gameObject.SetActive(false);
+            if (_activeWeaponIndex == _weapons.Count - 1)
+                _activeWeaponIndex = 0;
+            else
+                _activeWeaponIndex++;
+            _weapons[_activeWeaponIndex].gameObject.SetActive(true);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "Weapon":
+                PickUpWeapon(other.GetComponent<Weapon>());
+                break;
+        }
+    }
+
+    private void PickUpWeapon(Weapon weapon)
+    {
+        weapon.PickUp();
+        _weapons.Add(weapon);
+    }
+
+    private void Movement()
     {
         _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector3 moveX = transform.right * _moveInput.x;
@@ -37,23 +67,6 @@ public class Player : MonoBehaviour
         transform.Rotate(0f, mouseX, 0f);
 
         _characterController.SimpleMove((moveX + moveY) * _speed);
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ViewportPointToRay(new(.5f, .5f, 0));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _shootDistance))
-            {
-                _shootPoint.transform.position = hit.point;
-                if (hit.transform.TryGetComponent(out Hitable hitable))
-                {
-                    hitable.GetDamage(50);
-                }
-                print(hit.transform);
-            }
-        }
-
-
     }
 
     private void Start()
