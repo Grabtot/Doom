@@ -1,5 +1,5 @@
 public interface IPickable
 {
-    void PickUp();
-    void Drop();
+    void PickUp(Player player);
+    void Drop(Player player);
 }

@@ -1,18 +1,15 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Pistol : RangeWeapon
+public class Shotgun : RangeWeapon
 {
-    private Guid _guid;
-
-    private void Start()
-    {
-        _guid = Guid.NewGuid();
-    }
     protected override void Attack()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new(.5f, .5f, 0));
-
+        List<Ray> rays = new();
+        for (int i = 0; i < _ammoPerShoot; i++)
+        {
+            Ray ray
+        }
         if (Physics.Raycast(ray, out RaycastHit hit, _attackRange))
         {
             _shootPoint.transform.position = hit.point;

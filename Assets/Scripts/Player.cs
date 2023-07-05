@@ -16,11 +16,12 @@ public class Player : MonoBehaviour
 
     [Header("Weapon")]
     [SerializeField] private List<Weapon> _weapons;
-    private Weapon _activeWeapon;
 
     public Hitable Hitable;
     private Vector2 _moveInput;
-    private int _activeWeaponIndex = 0;
+    private int _activeWeaponIndex = 1;
+
+    public List<Weapon> Weapons => _weapons;
 
     private void Update()
     {
@@ -30,14 +31,15 @@ public class Player : MonoBehaviour
 
     private void ChangeWeapon()
     {
+
         if (Input.GetKeyDown(KeyCode.X))
         {
-            _weapons[_activeWeaponIndex].gameObject.SetActive(false);
-            if (_activeWeaponIndex == _weapons.Count - 1)
+            Weapons[_activeWeaponIndex].Unequip();
+            if (_activeWeaponIndex == Weapons.Count - 1)
                 _activeWeaponIndex = 0;
             else
                 _activeWeaponIndex++;
-            _weapons[_activeWeaponIndex].gameObject.SetActive(true);
+            Weapons[_activeWeaponIndex].Equip();
         }
     }
 
@@ -45,15 +47,11 @@ public class Player : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "Weapon":
-                PickUpWeapon(other.GetComponent<Weapon>());
+            case "Pickable":
+                IPickable item = other.GetComponent<IPickable>();
+                item.PickUp(this);
                 break;
         }
-    }
-
-    private void PickUpWeapon(Weapon weapon)
-    {
-        _weapons.Add(weapon);
     }
 
     private void Movement()
@@ -71,11 +69,12 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        Hitable.ReceivedDamage.AddListener(OnDamageReceived);
+        Hitable.ReceivedDamage += OnDamageReceived;
+        Hitable.Healed += (newHp, totalHp) => print($"{newHp} added. Total HP: {totalHp}");
     }
 
-    private void OnDamageReceived(int arg0, int arg1)
+    private void OnDamageReceived(int damage, int totalHp)
     {
-        print($"Received {arg0} damage. {arg1} HP left");
+        print($"Received {damage} damage. {totalHp} HP left");
     }
 }

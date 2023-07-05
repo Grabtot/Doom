@@ -27,12 +27,15 @@ namespace Enemy
 
         protected virtual void Start()
         {
-            _hitable.ReceivedFatalDamage.AddListener(OnFatalDamageReceived);
+            _hitable.ReceivedFatalDamage += OnFatalDamageReceived;
+            _hitable.ReceivedDamage += (damage, hp) =>
+                print($"{transform} received {damage} damage. {hp} Hp left");
         }
 
         private void OnFatalDamageReceived()
         {
             gameObject.SetActive(false);
+            print($"{transform} is dead");
         }
 
 

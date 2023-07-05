@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Hitable : MonoBehaviour
 {
@@ -7,9 +7,9 @@ public class Hitable : MonoBehaviour
     public int HP { get => _hP; private set => _hP = value; }
     public int MaxHP { get => _maxHP; private set => _maxHP = value; }
 
-    [HideInInspector] public UnityEvent ReceivedFatalDamage;
-    [HideInInspector] public UnityEvent<int, int> ReceivedDamage;
-    [HideInInspector] public UnityEvent<int, int> Healed;
+    [HideInInspector] public event Action ReceivedFatalDamage;
+    [HideInInspector] public event Action<int, int> ReceivedDamage;
+    [HideInInspector] public event Action<int, int> Healed;
     [Header("HP")]
     [SerializeField] private int _hP;
     [SerializeField] private int _maxHP;
@@ -19,9 +19,9 @@ public class Hitable : MonoBehaviour
         HP -= damage;
         if (HP <= 0)
         {
-            ReceivedFatalDamage.Invoke();
+            ReceivedFatalDamage?.Invoke();
         }
-        ReceivedDamage.Invoke(damage, HP);
+        ReceivedDamage?.Invoke(damage, HP);
     }
 
     public void Heal(int hp)
@@ -34,6 +34,6 @@ public class Hitable : MonoBehaviour
         {
             HP += hp;
         }
-        Healed.Invoke(hp, HP);
+        Healed?.Invoke(hp, HP);
     }
 }
