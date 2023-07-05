@@ -8,16 +8,20 @@ public class Shotgun : RangeWeapon
         List<Ray> rays = new();
         for (int i = 0; i < _ammoPerShoot; i++)
         {
-            Ray ray
+            Ray ray = Camera.main.ViewportPointToRay(new(Random.Range(.1f, 1f), Random.Range(.1f, 1f), 0));
+            rays.Add(ray);
         }
-        if (Physics.Raycast(ray, out RaycastHit hit, _attackRange))
+        foreach (Ray ray in rays)
         {
-            _shootPoint.transform.position = hit.point;
-            if (hit.transform.TryGetComponent(out Hitable hitable))
+            if (Physics.Raycast(ray, out RaycastHit hit, _attackRange))
             {
-                hitable.GetDamage(50);
+                _shootPoint.transform.position = hit.point;
+                if (hit.transform.TryGetComponent(out Hitable hitable))
+                {
+                    hitable.GetDamage(50);
+                }
+                //   print($"Shotgun {_guid} hits {hit.transform}");
             }
-            //   print($"Pistol {_guid} hits {hit.transform}");
         }
     }
 }
