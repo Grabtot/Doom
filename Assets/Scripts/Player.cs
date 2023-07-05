@@ -53,7 +53,6 @@ public class Player : MonoBehaviour
 
     private void PickUpWeapon(Weapon weapon)
     {
-        weapon.PickUp();
         _weapons.Add(weapon);
     }
 

@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Fists : MeleeWeapon
 {
-    private void Start()
-    {
-        _picked = true;
-    }
     protected override void Attack()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _attackRange);
