@@ -14,6 +14,7 @@ public class Fists : MeleeWeapon
             {
                 hitable.GetDamage(_damage);
             }
+
         }
     }
 

@@ -26,6 +26,7 @@ public class Shotgun : RangeWeapon
                 }
                 print($"Shotgun hits {hit.transform}");
             }
+
         }
     }
 }
