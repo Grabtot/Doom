@@ -6,6 +6,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected float _attackRange;
 
     [SerializeField] private bool _equiped = false;
+    public bool Equiped => _equiped;
     protected abstract void Attack();
     public void Equip()
     {

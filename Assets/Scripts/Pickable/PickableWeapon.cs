@@ -1,9 +1,9 @@
+using System.Linq;
 using UnityEngine;
 
 public class PickableWeapon : MonoBehaviour, IPickable
 {
     [SerializeField] private Weapon _weapon;
-    [SerializeField] private GameObject _weaponGameObject;
     [SerializeField] private int _ammoToAdd;
 
     public void Drop(Player player)
@@ -13,14 +13,18 @@ public class PickableWeapon : MonoBehaviour, IPickable
 
     public void PickUp(Player player)
     {
+        if (!player.Weapons.Any(weapon => weapon.GetType() == _weapon.GetType()))
+        {
+            Weapon newWeapon = Instantiate(_weapon, player.EquipedWeapon.transform.position,
+                new Quaternion(), player.transform);
 
-        if (!player.Weapons.Contains(_weapon))
-        {
-            player.Weapons.Add(_weapon);
+            player.EquipedWeapon.Unequip();
+            newWeapon.Equip();
+            player.Weapons.Add(newWeapon);
         }
-        if (_weapon is RangeWeapon rangeWeapon)
+        else if (_weapon is RangeWeapon rangeWeapon)
         {
-            rangeWeapon.AddAmmo(_ammoToAdd);
+            player.Weapons.OfType<RangeWeapon>().First(weapon => weapon.GetType() == _weapon.GetType()).AddAmmo(_ammoToAdd);
         }
         gameObject.SetActive(false);
     }

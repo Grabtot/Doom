@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CharacterController), typeof(Hitable))]
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] private List<Weapon> _weapons;
 
     public Hitable Hitable;
+    public Weapon EquipedWeapon => _weapons.First(weapon => weapon.Equiped);
     private Vector2 _moveInput;
     private int _activeWeaponIndex = 1;
 
