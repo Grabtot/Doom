@@ -1,14 +1,8 @@
-using System;
 using UnityEngine;
 
 public class Pistol : RangeWeapon
 {
-    private Guid _guid;
 
-    private void Start()
-    {
-        _guid = Guid.NewGuid();
-    }
     protected override void Attack()
     {
         Ray ray = Camera.main.ViewportPointToRay(new(.5f, .5f, 0));
@@ -20,7 +14,7 @@ public class Pistol : RangeWeapon
             {
                 hitable.GetDamage(50);
             }
-            //   print($"Pistol {_guid} hits {hit.transform}");
+            print($"Pistol hits {hit.transform}");
         }
     }
 }
